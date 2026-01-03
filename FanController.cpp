@@ -18,6 +18,7 @@ FanController::FanController(byte sensorPin, unsigned int sensorThreshold, byte 
   pinMode(sensorPin, INPUT_PULLUP);
 #endif
 	_pwmDutyCycle = 100;
+	_resolution = 8;
 }
 
 void FanController::begin()
@@ -27,6 +28,7 @@ void FanController::begin()
 	_instances[instance] = this;
 #if defined(ARDUINO_ARCH_ESP32)
 	analogWriteResolution(_pwmPin, 9);
+	_resolution = 9;
 	analogWriteFrequency(_pwmPin, (uint32_t)25000);
 #endif
 	digitalWrite(_sensorPin, HIGH);
@@ -51,7 +53,7 @@ unsigned int FanController::getSpeed() {
 
 void FanController::setDutyCycle(byte dutyCycle) {
 	_pwmDutyCycle = min((int)dutyCycle, 100);
-	analogWrite(_pwmPin, (int)(2.55 * _pwmDutyCycle));
+	analogWrite(_pwmPin, (int)(((1 << _resolution) - 1) * _pwmDutyCycle / 100));
 }
 
 byte FanController::getDutyCycle() {

@@ -24,6 +24,7 @@ class FanController
 		byte _pwmPin;
 		byte _pwmDutyCycle;
 		byte _instance;
+		byte _resolution;
 		unsigned int _lastReading;
 		volatile unsigned int _halfRevs;
 		unsigned long _lastMillis;
